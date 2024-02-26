@@ -25,7 +25,6 @@ public class Game : MonoBehaviour
         _bird.GameOver -= OnGameOver;
         _startScreen.PlayButtonClicked -= OnPlayButtonClick;
         _endScreen.RestartButtonClicked -= OnRestartButtonClick;
-
     }
 
     private void OnPlayButtonClick()
