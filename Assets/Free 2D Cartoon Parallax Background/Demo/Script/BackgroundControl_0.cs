@@ -7,12 +7,12 @@ public class BackgroundControl_0 : MonoBehaviour
     [Header("BackgroundNum 0 -> 3")]
     public int backgroundNum;
     public Sprite[] Layer_Sprites;
-    private GameObject[] Layer_Object = new GameObject[5];
+    private UnityEngine.GameObject[] Layer_Object = new UnityEngine.GameObject[5];
     private int max_backgroundNum = 3;
     void Start()
     {
         for (int i = 0; i < Layer_Object.Length; i++){
-            Layer_Object[i] = GameObject.Find("Layer_" + i);
+            Layer_Object[i] = UnityEngine.GameObject.Find("Layer_" + i);
         }
         
         ChangeSprite();

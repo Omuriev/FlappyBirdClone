@@ -8,7 +8,7 @@ public class ObjectRemover : MonoBehaviour
     {
         if (collision.TryGetComponent(out Enemy enemy))
         {
-            _pool.PutObject(enemy);
+            _pool.PutObject(enemy.gameObject);
         }
     }
 }

@@ -1,42 +1,35 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ObjectPool : MonoBehaviour
 {
-    [SerializeField] private Transform _container;
-    [SerializeField] private Enemy _prefab;
+    [SerializeField] private GameObject _prefab;
 
-    private Queue<Enemy> _pool;
+    private Queue<GameObject> _pool;
 
-    public IEnumerable<Enemy> PooledObjects => _pool;
+    public IEnumerable<GameObject> PooledObjects => _pool;
 
     private void Start()
     {
-        _pool = new Queue<Enemy>();
+        _pool = new Queue<GameObject>();
     }
 
-    public Enemy GetObject()
+    public GameObject GetObject()
     {
         if (_pool.Count == 0)
         {
-            Enemy enemy = Instantiate(_prefab);
-            enemy.transform.parent = _container;
-
-            return enemy;
+            GameObject gameObject = Instantiate(_prefab, transform.position, Quaternion.identity);
+            return gameObject;
         }
 
         return _pool.Dequeue();
     }
 
-    public void PutObject(Enemy enemy)
+    public void PutObject(GameObject enemy)
     {
         _pool.Enqueue(enemy);
 
         enemy.gameObject.SetActive(false);
-    }
-
-    public void Reset()
-    {
-        _pool.Clear();
     }
 }

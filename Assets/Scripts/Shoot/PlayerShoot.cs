@@ -4,21 +4,22 @@ public class PlayerShoot : Shoot
 {
     private void Update()
     {
-        OnTryShoot();
+        TryShoot(transform.right);
     }
 
-    protected override void OnTryShoot()
+    protected override void TryShoot(Vector3 direction)
     {
-        if (CanShoot == true && Input.GetKey(KeyCode.E))
+        if (Input.GetKey(KeyCode.E))
         {
-            Bullet bullet = CreateBullet();
-            bullet.Fire(transform.right);
-            StartCoroutine(WaitBeforeShoot());
+            base.TryShoot(direction);
         }
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
-        StopCoroutine(WaitBeforeShoot());
+        if (WaitBeforeSpawnBulletCoroutine != null)
+        {
+            StopCoroutine(WaitBeforeSpawnBulletCoroutine);
+        }
     }
 }

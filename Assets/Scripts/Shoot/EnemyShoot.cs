@@ -2,23 +2,18 @@ using UnityEngine;
 
 public class EnemyShoot : Shoot
 {
-    private float currentTime = 0;
-
     private void Update()
     {
-        OnTryShoot();
+        TryShoot(-transform.right);
     }
 
-    protected override void OnTryShoot()
+    private void OnDisable()
     {
-        currentTime += Time.deltaTime;
+        StopCoroutine(WaitBeforeSpawnBulletCoroutine);
+    }
 
-        if (currentTime >= TimeBetweenShot)
-        {
-            currentTime = 0;
-            Bullet bullet = CreateBullet();
-
-            bullet.Fire(-transform.right);
-        }
+    protected override void TryShoot(Vector3 direction)
+    {
+        base.TryShoot(direction);
     }
 }

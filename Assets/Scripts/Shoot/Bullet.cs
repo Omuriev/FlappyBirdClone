@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class Bullet : MonoBehaviour, IInteractable
@@ -22,23 +19,12 @@ public class Bullet : MonoBehaviour, IInteractable
         if (collision.TryGetComponent(out Health health))
         {
             Destroy(health.gameObject);
+            gameObject.SetActive(false);
         }
-
-        StopCoroutine(WaitBeforeDestroy());
-        Destroy(gameObject);
     }
 
     public void Fire(Vector3 direction)
     {
         _rigidbody.velocity = direction * _speed;
-        StartCoroutine(WaitBeforeDestroy());
-    }
-   
-    private IEnumerator WaitBeforeDestroy()
-    {
-        WaitForSeconds waitTime = new WaitForSeconds(_timeBeforeDestroy);
-        yield return waitTime;
-
-        Destroy(gameObject);
     }
 }
