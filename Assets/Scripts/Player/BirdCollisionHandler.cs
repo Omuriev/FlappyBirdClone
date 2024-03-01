@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class BirdCollisionHandler : MonoBehaviour
 {
-    public event Action<IInteractable> CollisionDetected;
+    public event Action CollisionDetected;
 
     private void OnValidate()
     {
@@ -14,7 +14,7 @@ public class BirdCollisionHandler : MonoBehaviour
     {
         if (collision.TryGetComponent(out IInteractable interactable))
         {
-            CollisionDetected?.Invoke(interactable);
+            CollisionDetected?.Invoke();
         }
     }
 }

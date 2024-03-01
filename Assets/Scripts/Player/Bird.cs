@@ -31,11 +31,8 @@ public class Bird : MonoBehaviour
         _birdMover.Reset();
     }
 
-    private void ProcessCollision(IInteractable interactable)
+    private void ProcessCollision()
     {
-        if (interactable is Enemy || interactable is Bullet)
-        {
-            GameOver?.Invoke();
-        }
+         GameOver?.Invoke();
     }
 }

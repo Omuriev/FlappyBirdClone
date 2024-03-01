@@ -5,10 +5,27 @@ using UnityEngine;
 public class Shoot : MonoBehaviour
 {
     [SerializeField] private float _timeBetweenShot;
-    [SerializeField] private ObjectPool _pool;
+    [SerializeField] protected ObjectPool Pool;
+
+    private List<Bullet> _bullets;
 
     protected bool CanShoot = true;
     protected Coroutine WaitBeforeSpawnBulletCoroutine;
+
+    private void Awake()
+    {
+        _bullets = new List<Bullet>();
+    }
+
+    private void OnDisable()
+    {
+        foreach (Bullet item in _bullets)
+        {
+            item.Destroyed -= OnDestroyed;
+        }
+
+        Pool.Reset();
+    }
 
     protected virtual void TryShoot(Vector3 direction) 
     {
@@ -23,30 +40,28 @@ public class Shoot : MonoBehaviour
 
             if (bullet != null)
             {
+                _bullets.Add(bullet);
+
                 bullet.Fire(direction);
-                WaitBeforeSpawnBulletCoroutine = StartCoroutine(WaitBeforeSpawnBullet(bullet));
+                bullet.Destroyed += OnDestroyed;
+                WaitBeforeSpawnBulletCoroutine = StartCoroutine(WaitBeforeSpawnBullet());
             }
         }
     }
 
-    protected IEnumerator WaitBeforeSpawnBullet(Bullet bullet)
+    protected IEnumerator WaitBeforeSpawnBullet()
     {
         WaitForSeconds waitTime = new WaitForSeconds(_timeBetweenShot);
         CanShoot = false;
 
         yield return waitTime;
 
-        if (bullet.TryGetComponent(out GameObject gameObject))
-        {
-            _pool.PutObject(gameObject);
-        }
-
         CanShoot = true;
     }
 
     protected Bullet SpawnBullet()
     {
-        var item = _pool.GetObject();
+        var item = Pool.GetObject();
 
         if (item.TryGetComponent(out Bullet bullet))
         {
@@ -55,5 +70,21 @@ public class Shoot : MonoBehaviour
         }
 
         return bullet;
+    }
+
+    private void OnDestroyed(Bullet bullet)
+    {
+        Bullet bulletForRemove;
+
+        foreach (Bullet item in _bullets)
+        {
+            if (bullet == item)
+            {
+                bulletForRemove = item;
+                Pool.PutObject(bullet.gameObject);
+            }
+        }
+
+        _bullets.Remove(bullet);
     }
 }
